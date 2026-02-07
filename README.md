@@ -25,7 +25,9 @@ wget -q -O omkurulum.sh https://raw.githubusercontent.com/okannako/openmind/refs
 - Bundan sonra Omcu bakiyeniz bitene kadar çalışmaya devam edecek. Eğer omcu bakiyesi edinmek istiyorsanız ücretli planlara sahip olmanız gerekiyor. Bu konuda da son tercih sizin.
 
 ## Node Durdurma ve Tekrar Başlatma
+- Node durdurmak için ``ctrl+c`` yapınca duruyor durmazsa birkaç defa basın. Başlatmak içinde aşağıdaki kodları giriyoruz.
 ```
+cd
 cd ~/OM1
 source .venv/bin/activate
 uv run src/run.py conversation
