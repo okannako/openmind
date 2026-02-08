@@ -10,7 +10,7 @@
 ## Tavsiye Edilen Sistem Gereksinimleri
 - CPU: 4+ ÇEKİRDEK
 - RAM: 4+ GB
-- İşletim Sistemi: Linux (Ubuntu 20, 22, 24)
+- İşletim Sistemi: Linux (Ubuntu 22)
 
 ## Kurulum Adımları ve Kodları
 - Aşağıdaki tek satır kodu vps'nizde başlattığınızda size sadece Api Key'nizi soracak bunun girişini kendiniz yaptıktan sonra bütün işlemleri script tamamlayacak. 
