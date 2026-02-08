@@ -41,70 +41,58 @@ echo "================================================"
 echo ""
 
 # ================================================
-# 📋 ÖN HAZIRLIK (5 dakika)
+# 📋 ÖN HAZIRLIK - TEK SEFERDE TÜM PAKETLER
 # ================================================
 echo -e "${BLUE}================================================${NC}"
-echo -e "${GREEN}📋 ÖN HAZIRLIK BAŞLIYOR (5 dakika)${NC}"
+echo -e "${GREEN}📋 SISTEM HAZIRLIĞI (3-5 dakika)${NC}"
 echo -e "${BLUE}================================================${NC}"
 echo ""
 
-# Adım 1: Sistem Güncelleme
-echo -e "${CYAN}[1/5] Sistem paket listesi güncelleniyor...${NC}"
-sudo apt update -y > /dev/null 2>&1
-echo -e "${GREEN}      ✓ Paket listesi güncellendi${NC}"
-sleep 1
-
-echo -e "${CYAN}[2/5] Sistem paketleri yükseltiliyor (bu biraz sürebilir)...${NC}"
-sudo apt upgrade -y > /dev/null 2>&1
-echo -e "${GREEN}      ✓ Sistem güncel${NC}"
-sleep 1
+echo -e "${CYAN}Tüm sistem paketleri kuruluyor...${NC}"
+echo -e "${YELLOW}(Bu işlem birkaç dakika sürebilir)${NC}"
 echo ""
 
-# Adım 2: Git ve Temel Araçlar
-echo -e "${CYAN}[3/5] Git ve temel araçlar kuruluyor...${NC}"
-sudo apt install -y git curl wget > /dev/null 2>&1
-echo -e "${GREEN}      ✓ Git kuruldu: $(git --version | head -n1)${NC}"
-sleep 1
-echo ""
-
-# Adım 3: Python ve Geliştirme Paketleri
-echo -e "${CYAN}[4/5] Python geliştirme ortamı hazırlanıyor...${NC}"
-sudo apt install -y python3-all-dev python3-pip build-essential > /dev/null 2>&1
-echo -e "${GREEN}      ✓ Python: $(python3 --version)${NC}"
-echo -e "${GREEN}      ✓ Pip: $(pip3 --version | cut -d' ' -f2)${NC}"
-sleep 1
-echo ""
-
-# Adım 4: Ses ve Medya Paketleri
-echo -e "${CYAN}[5/5] Ses ve medya kütüphaneleri kuruluyor...${NC}"
-sudo apt install -y portaudio19-dev ffmpeg alsa-utils > /dev/null 2>&1
-echo -e "${GREEN}      ✓ PortAudio kuruldu${NC}"
-echo -e "${GREEN}      ✓ FFmpeg: $(ffmpeg -version 2>&1 | head -n1 | cut -d' ' -f3)${NC}"
-echo -e "${GREEN}      ✓ ALSA utilities kuruldu${NC}"
+# TEK SEFERDE HEPSINI YÜK
+sudo apt update -y && \
+sudo apt install -y \
+    git \
+    curl \
+    wget \
+    python3-all-dev \
+    python3-pip \
+    build-essential \
+    portaudio19-dev \
+    ffmpeg \
+    alsa-utils
 
 echo ""
-echo -e "${CYAN}[+] Virtual ses kartı modülü yükleniyor...${NC}"
-sudo modprobe snd-dummy 2>/dev/null || echo -e "${YELLOW}      ⚠ Virtual ses kartı yüklenemedi (isteğe bağlı)${NC}"
-echo -e "${GREEN}      ✓ Ses sistemi yapılandırıldı${NC}"
+echo -e "${GREEN}✓ Git: $(git --version | head -n1)${NC}"
+echo -e "${GREEN}✓ Python: $(python3 --version)${NC}"
+echo -e "${GREEN}✓ Pip: $(pip3 --version | cut -d' ' -f2)${NC}"
+echo -e "${GREEN}✓ FFmpeg: $(ffmpeg -version 2>&1 | head -n1 | cut -d' ' -f3)${NC}"
+echo ""
+
+echo -e "${CYAN}Virtual ses kartı modülü yükleniyor...${NC}"
+sudo modprobe snd-dummy 2>/dev/null && echo -e "${GREEN}✓ Yüklendi${NC}" || echo -e "${YELLOW}⚠ Atlandı${NC}"
 
 echo ""
 echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${GREEN}✅ ÖN HAZIRLIK TAMAMLANDI!${NC}"
+echo -e "${GREEN}✅ SİSTEM HAZIR!${NC}"
 echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
 sleep 2
 
 # ================================================
-# 🔧 UV PACKAGE MANAGER KURULUMU (2 dakika)
+# 🔧 UV KURULUMU
 # ================================================
 echo -e "${BLUE}================================================${NC}"
-echo -e "${GREEN}🔧 UV PACKAGE MANAGER KURULUMU (2 dakika)${NC}"
+echo -e "${GREEN}🔧 UV KURULUMU${NC}"
 echo -e "${BLUE}================================================${NC}"
 echo ""
 
 echo -e "${CYAN}UV Python paket yöneticisi kuruluyor...${NC}"
 sudo pip install uv --quiet
-echo -e "${GREEN}✓ UV kuruldu: $(uv --version)${NC}"
+echo -e "${GREEN}✓ UV: $(uv --version)${NC}"
 
 if ! command -v uv &> /dev/null; then
     echo -e "${RED}❌ UV kurulamadı!${NC}"
@@ -115,73 +103,72 @@ echo ""
 sleep 2
 
 # ================================================
-# 📥 OM1 KURULUMU (5 dakika)
+# 📥 OM1 KURULUMU
 # ================================================
 echo -e "${BLUE}================================================${NC}"
-echo -e "${GREEN}📥 OM1 KURULUMU (5 dakika)${NC}"
+echo -e "${GREEN}📥 OM1 KURULUMU${NC}"
 echo -e "${BLUE}================================================${NC}"
 echo ""
 
 cd "$HOME"
 
 if [ -d "OM1" ]; then
-    echo -e "${YELLOW}⚠ Mevcut OM1 kurulumu bulundu, temizleniyor...${NC}"
+    echo -e "${YELLOW}⚠ Eski kurulum temizleniyor...${NC}"
     rm -rf OM1
     echo -e "${GREEN}✓ Temizlendi${NC}"
 fi
 
-echo -e "${CYAN}OM1 repository'si GitHub'dan indiriliyor...${NC}"
-git clone https://github.com/OpenMind/OM1.git > /dev/null 2>&1
-echo -e "${GREEN}✓ Repository indirildi${NC}"
+echo -e "${CYAN}GitHub'dan indiriliyor...${NC}"
+git clone https://github.com/OpenMind/OM1.git
+echo -e "${GREEN}✓ İndirildi${NC}"
+echo ""
 
 cd OM1
 
-echo -e "${CYAN}Alt modüller senkronize ediliyor...${NC}"
-git submodule update --init > /dev/null 2>&1
-echo -e "${GREEN}✓ Alt modüller hazır${NC}"
+echo -e "${CYAN}Alt modüller yükleniyor...${NC}"
+git submodule update --init
+echo -e "${GREEN}✓ Hazır${NC}"
+echo ""
 
 echo -e "${CYAN}Virtual environment oluşturuluyor...${NC}"
 uv venv
 if [ -f ".venv/bin/activate" ]; then
-    echo -e "${GREEN}✓ Virtual environment hazır${NC}"
+    echo -e "${GREEN}✓ Oluşturuldu${NC}"
 else
-    echo -e "${RED}❌ Virtual environment oluşturulamadı!${NC}"
+    echo -e "${RED}❌ Hata!${NC}"
     exit 1
 fi
 
 echo ""
 echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${GREEN}✅ OM1 KURULUMU TAMAMLANDI!${NC}"
+echo -e "${GREEN}✅ OM1 KURULDU!${NC}"
 echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
 sleep 2
 
 # ================================================
-# 🔑 API KEY AYARLAMA
+# 🔑 API KEY
 # ================================================
 echo -e "${BLUE}================================================${NC}"
-echo -e "${YELLOW}🔑 API KEY AYARLAMA${NC}"
+echo -e "${YELLOW}🔑 API KEY${NC}"
 echo -e "${BLUE}================================================${NC}"
 echo ""
-echo -e "${CYAN}Portal Openmind sitesinden aldığınız api'yi girin:${NC}"
-echo -e "${CYAN}👉 https://portal.openmind.org/${NC}"
+echo -e "${CYAN}Portal: https://portal.openmind.org/${NC}"
 echo ""
 read -p "API Key: " API_KEY
 
 if [ -z "$API_KEY" ]; then
-    echo ""
-    echo -e "${RED}❌ API key boş olamaz!${NC}"
+    echo -e "${RED}❌ Boş olamaz!${NC}"
     exit 1
 fi
 
 echo "OM_API_KEY=$API_KEY" > .env
-echo ""
-echo -e "${GREEN}✓ API key güvenli bir şekilde kaydedildi${NC}"
+echo -e "${GREEN}✓ Kaydedildi${NC}"
 echo ""
 sleep 2
 
 # ================================================
-# 🎉 KURULUM TAMAMLANDI - 10 SANİYE MESAJ
+# 🎉 TAMAMLANDI
 # ================================================
 clear
 echo ""
@@ -213,7 +200,7 @@ echo ""
 sleep 1
 
 # ================================================
-# 🚀 OTOMATİK BAŞLATMA
+# 🚀 BAŞLAT
 # ================================================
 cd "$HOME/OM1"
 source .venv/bin/activate
